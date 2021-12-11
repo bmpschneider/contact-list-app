@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-container class="search-content">
+      <!-- <v-container class="search-content">
         <v-text-field
           hide-details
           class="search-contact"
@@ -15,23 +15,35 @@
         <v-btn class="btn-new-contact" color="primary" elevation="2" x-large
           ><v-icon class="icon-new-contact">mdi-account-multiple-plus </v-icon> New contact</v-btn
         >
-      </v-container>
+      </v-container> -->
 
       <v-container>
-        <v-data-table :headers="headers" :items="desserts" :search="search" sort-by="name" class="elevation-1">
+        <v-data-table
+          :headers="headers"
+          :items="desserts"
+          :search="search"
+          sort-by="name"
+          class="elevation-1"
+          mobile-breakpoint="0"
+        >
           <template v-slot:top>
             <v-toolbar flat>
               <v-text-field
                 v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
+                outlined
+                dense
+                label="Search contacts"
+                prepend-inner-icon="mdi-magnify"
                 single-line
                 hide-details
               ></v-text-field>
               <v-spacer></v-spacer>
               <v-dialog v-model="dialog" max-width="500px">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on"> New Item </v-btn>
+                  <v-btn class="btn-new-contact" color="primary" dark v-bind="attrs" v-on="on">
+                    <v-icon class="icon-new-contact">mdi-account-multiple-plus </v-icon>
+                    New contact
+                  </v-btn>
                 </template>
                 <v-card>
                   <v-card-title>
@@ -55,6 +67,16 @@
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                           <v-text-field v-model="editedItem.city" label="City"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field v-model="editedItem.phoneNumber2" label="phoneNumber2"></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field v-model="cep" label="cep"></v-text-field>
+                          <v-btn color="primary" dark class="mb-2" v-on:click="getAdress()"> Search Adress </v-btn>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                          <v-text-field v-model="editedItem.state" label="UF"></v-text-field>
                         </v-col>
                       </v-row>
                     </v-container>
@@ -97,6 +119,7 @@
 export default {
   name: "Home",
   data: () => ({
+    cep: "",
     search: "",
     dialog: false,
     dialogDelete: false,
@@ -107,20 +130,33 @@ export default {
         sortable: false,
         value: "name",
       },
-      { text: "Email", value: "email" },
       { text: "Phone Number", value: "phoneNumber" },
-      { text: "Street", value: "street" },
-      { text: "City", value: "city" },
+      {
+        text: "Email",
+        value: "email",
+        align: " d-none d-lg-table-cell align-center",
+      },
+      { text: "Street", value: "street", align: " d-none d-lg-table-cell" },
+      { text: "City", value: "city", align: " d-none d-lg-table-cell" },
+      { text: "CEP", value: "cep", align: " d-none d-lg-table-cell" },
+      {
+        text: "Phone Number 2",
+        value: "phoneNumber2",
+        align: " d-none d-lg-table-cell",
+      },
       { text: "Actions", value: "actions", sortable: false },
     ],
     desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
-      email: 0,
-      phoneNumber: 0,
-      street: 0,
-      city: 0,
+      email: "",
+      phoneNumber: "",
+      street: "",
+      city: "",
+      phoneNumber2: "",
+      cep: "",
+      state: "",
     },
     defaultItem: {
       name: "",
@@ -138,6 +174,11 @@ export default {
   },
 
   watch: {
+    cep(val) {
+      if (val.length == 8) {
+        this.getAdress(val);
+      }
+    },
     dialog(val) {
       val || this.close();
     },
@@ -152,22 +193,19 @@ export default {
 
   methods: {
     initialize() {
-      this.desserts = [
-        {
-          name: "Bruno Miguel",
-          email: "brunopschneider@gmail.com",
-          phoneNumber: "(48) 984562072",
-          street: "João Pio Duarte Silva 844",
-          city: "Florianópolis",
-        },
-        {
-          name: "Stefani Marcelino",
-          email: "stefanism5@hotmail.com",
-          phoneNumber: "(48) 984562072",
-          street: "Santos Saraiva 1302",
-          city: "São José",
-        },
-      ];
+      this.desserts = this.$store.state.contactList;
+    },
+
+    async getAdress(cep) {
+      console.log(this.editItem.cep, "cep");
+      try {
+        await this.$store.dispatch("getAdress", cep);
+        this.editedItem.street = this.$store.state.adress.logradouro;
+        this.editedItem.city = this.$store.state.adress.localidade;
+        this.editedItem.state = this.$store.state.adress.uf;
+      } catch (e) {
+        console.error(e);
+      }
     },
 
     editItem(item) {
@@ -216,6 +254,10 @@ export default {
 </script>
 
 <style scoped>
+.align-center {
+  text-align: center !important;
+}
+
 .container {
   background-color: white;
 }
