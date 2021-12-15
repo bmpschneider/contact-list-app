@@ -329,15 +329,15 @@ export default {
     async getAddress(cep) {
       try {
         await this.$store.dispatch("getAddress", cep);
-        if (this.$store.state.adress) {
+        if (this.$store.state.address) {
           this.errorMessagesCep = false;
         } else {
           this.errorMessagesCep = true;
         }
-        this.editedItem.street = this.$store.state.adress.logradouro;
-        this.editedItem.district = this.$store.state.adress.bairro;
-        this.editedItem.city = this.$store.state.adress.localidade;
-        this.editedItem.state = this.$store.state.adress.uf;
+        this.editedItem.street = this.$store.state.address.logradouro;
+        this.editedItem.district = this.$store.state.address.bairro;
+        this.editedItem.city = this.$store.state.address.localidade;
+        this.editedItem.state = this.$store.state.address.uf;
       } catch (e) {
         this.errorMessagesCep = true;
         console.error(e);

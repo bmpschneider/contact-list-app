@@ -129,18 +129,23 @@ export default new Vuex.Store({
   },
   actions: {
     async getUsers({ commit }) {
-      await axios.get(`https://jsonplaceholder.typicode.com/users`).then((response) => {
-        commit("SET_USERS", response.data);
-      });
+      await axios
+        .get(`https://jsonplaceholder.typicode.com/users`)
+        .then((response) => {
+          commit("SET_USERS", response.data);
+        });
     },
     async getAddress({ commit }, payload) {
-      await axios.get(`https://viacep.com.br/ws/${payload}/json/`).then((response) => {
-        if (response.data.erro) {
-          commit("SET_ADDRESS", false);
-        } else {
-          commit("SET_ADDRESS", response.data);
-        }
-      });
+      await axios
+        .get(`https://viacep.com.br/ws/${payload}/json/`)
+        .then((response) => {
+          console.log(response, "resposta");
+          if (response.data.erro) {
+            commit("SET_ADDRESS", false);
+          } else {
+            commit("SET_ADDRESS", response.data);
+          }
+        });
     },
     async addNewContact({ commit }, payload) {
       commit("SET_NEW_CONTACT", payload);
