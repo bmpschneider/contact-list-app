@@ -31,4 +31,10 @@ main {
   background-image: url("assets/background.jpg");
   background-repeat: repeat;
 }
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 !important;
+  }
+}
 </style>

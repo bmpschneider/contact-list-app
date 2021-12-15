@@ -10,15 +10,20 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-text-field
-            v-model="search"
+          <v-autocomplete
+            :items="items"
+            :search-input.sync="search"
+            class="autocomplete-search"
+            placeholder="Search contacts"
+            prepend-inner-icon="mdi-magnify"
+            hide-no-data
+            hide-selected
+            item-text="Description"
+            item-value="name"
+            clearable
             outlined
             dense
-            label="Search contacts"
-            prepend-inner-icon="mdi-magnify"
-            single-line
-            hide-details
-          ></v-text-field>
+          ></v-autocomplete>
           <v-spacer></v-spacer>
 
           <v-alert class="alert-sucess" type="success" v-if="alertSucess" transition="fade-transition"
@@ -247,13 +252,17 @@ export default {
     alertError: false,
     msgSucess: "Registered Successfully",
   }),
-
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Contact" : "Edit Contact";
     },
+    items() {
+      return this.desserts.map((desserts) => {
+        const Description = desserts.name;
+        return Object.assign({}, desserts, { Description });
+      });
+    },
   },
-
   watch: {
     cep(val) {
       if (val.length == 8) {
@@ -267,11 +276,9 @@ export default {
       val || this.closeDelete();
     },
   },
-
   created() {
     this.renderList();
   },
-
   methods: {
     renderList(tab) {
       let currentTab;
@@ -298,8 +305,24 @@ export default {
           break;
       }
     },
+    async addContact() {
+      try {
+        await this.$store.dispatch("addNewContact", this.editedItem);
+        this.msgSucess = "Successfully registered";
+      } catch (e) {
+        console.error(e);
+      }
+    },
+    async editedContact() {
+      Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      try {
+        await this.$store.dispatch("editedList", this.editedItem);
+        this.msgSucess = "Successfully edited!";
+      } catch (e) {
+        console.error(e);
+      }
+    },
     async getAddress(cep) {
-      console.log(this.editItem.cep, "cep");
       try {
         await this.$store.dispatch("getAddress", cep);
         if (this.$store.state.adress) {
@@ -349,21 +372,19 @@ export default {
     },
     save() {
       let isValid = !!this.editedItem.name;
+      let isEdit = this.editedIndex > -1;
 
       if (isValid) {
-        if (this.editedIndex > -1) {
-          Object.assign(this.desserts[this.editedIndex], this.editedItem);
-          this.$store.dispatch("editedList", this.editedItem);
-          this.msgSucess = "Successfully edited!";
+        if (isEdit) {
+          this.editedContact();
         } else {
-          this.$store.dispatch("addNewContact", this.editedItem);
-          this.msgSucess = "Successfully registered";
+          this.addContact();
         }
         this.alertSucess = true;
         this.cep = "";
         this.selectedCategory = "";
         this.errorMessagesName = false;
-        this.initialize();
+        this.renderList();
         this.hideAlert();
         this.close();
       } else {
@@ -373,9 +394,12 @@ export default {
       }
     },
     isMobile() {
-      var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobile) {
+      if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        // true for mobile device
         return true;
+      } else {
+        // false for not mobile device
+        return false;
       }
     },
     hideAlert() {
@@ -448,6 +472,10 @@ export default {
 
 .content-new-info {
   background-color: lavender;
+}
+
+.autocomplete-search {
+  margin-top: 26px !important;
 }
 
 @media (max-width: 480px) {
