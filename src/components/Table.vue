@@ -25,7 +25,6 @@
             dense
           ></v-autocomplete>
           <v-spacer></v-spacer>
-
           <v-alert class="alert-sucess" type="success" v-if="alertSucess" transition="fade-transition"
             >{{ msgSucess }}
           </v-alert>
@@ -132,6 +131,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+
           <v-dialog v-model="dialogDelete" max-width="500px">
             <v-card>
               <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
@@ -145,18 +145,22 @@
           </v-dialog>
         </v-toolbar>
       </template>
+
       <template v-slot:item.actions="{ item }">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
         <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
       </template>
+
       <template v-slot:item.avatar="{ item }">
         <v-avatar class="accent white--text" color="primary" size="36" v-text="item.name.slice(0, 1).toUpperCase()">{{
           item
         }}</v-avatar>
       </template>
+
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize"> Reset </v-btn>
       </template>
+
     </v-data-table>
   </v-container>
 </template>
@@ -416,43 +420,34 @@ export default {
 .align-center {
   text-align: center !important;
 }
-
 .container {
   background-color: white;
 }
-
 .search-content {
   display: flex;
 }
-
 .search-contact {
   flex: 1;
 }
-
 .btn-new-contact {
   margin: 0 0 0 12px;
   text-transform: none;
   letter-spacing: 0;
 }
-
 .icon-new-contact {
   margin: 0 5px 0 0;
 }
-
 .panel-category {
   color: white;
 }
-
 .checkbox-category {
   display: flex;
   justify-content: flex-start;
   padding: 16px 0 0 12px !important;
 }
-
 .checkbox-client {
   margin-right: 16px;
 }
-
 .alert-sucess {
   height: 38px !important;
   margin: 0px !important;
@@ -460,20 +455,16 @@ export default {
   align-items: center;
   width: 250px;
 }
-
 .alert-error {
   margin: 0 16px;
   padding: 12px;
 }
-
 .btn-new-info {
   width: inherit;
 }
-
 .content-new-info {
   background-color: lavender;
 }
-
 .autocomplete-search {
   margin-top: 26px !important;
 }
@@ -482,15 +473,12 @@ export default {
   .search-content {
     display: block;
   }
-
   .search-contact {
     margin-bottom: 8px !important;
   }
-
   .checkbox-category {
     padding: 0px 0 0 12px !important;
   }
-
   .content-form {
     padding: 0 12px 12px !important;
   }
