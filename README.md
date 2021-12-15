@@ -1,6 +1,6 @@
 # contact-app
 
-<p>This project is a responsive Contact List APP using Vuejs</p>
+This project is a responsive Contact List APP using Vuejs
 
 ### Requirements
 
