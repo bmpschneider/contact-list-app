@@ -29,5 +29,6 @@ export default {
 main {
   background-color: #f1f1f1;
   background-image: url("assets/background.jpg");
+  background-repeat: repeat;
 }
 </style>

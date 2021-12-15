@@ -10,6 +10,7 @@ export default new Vuex.Store({
     address: {},
     contactList: [
       {
+        id: 1,
         name: "Bruno Miguel Cliente",
         email: "brunopschneider@gmail.com",
         phoneNumber: "(48) 984562072",
@@ -19,11 +20,11 @@ export default new Vuex.Store({
         city: "Florianópolis",
         state: "SC",
         cep: "88037000",
-        phoneNumber2: "4898495329",
         client: true,
         favorite: false,
       },
       {
+        id: 2,
         name: "Stefani Marcelino Favorita",
         email: "stefanism5@hotmail.com",
         phoneNumber: "(48) 984562072",
@@ -33,11 +34,11 @@ export default new Vuex.Store({
         city: "São José",
         state: "SC",
         cep: "88037000",
-        phoneNumber2: "4898495329",
         client: false,
         favorite: true,
       },
       {
+        id: 3,
         name: "Josue Ferreira",
         email: "josue@hotmail.com",
         phoneNumber: "(48) 984562272",
@@ -47,11 +48,11 @@ export default new Vuex.Store({
         city: "Florianópolis",
         state: "SC",
         cep: "88050515",
-        phoneNumber2: "4898495329",
         client: false,
         favorite: true,
       },
       {
+        id: 4,
         name: "Abel Neto",
         email: "abel@hotmail.com",
         phoneNumber: "(48) 984562272",
@@ -61,11 +62,11 @@ export default new Vuex.Store({
         city: "Florianópolis",
         state: "SC",
         cep: "88050515",
-        phoneNumber2: "4898495329",
         client: false,
         favorite: true,
       },
       {
+        id: 5,
         name: "Rodrigo Fraga",
         email: "rodrigo@hotmail.com",
         phoneNumber: "(48) 984562272",
@@ -75,11 +76,11 @@ export default new Vuex.Store({
         city: "Florianópolis",
         state: "SC",
         cep: "88050515",
-        phoneNumber2: "4898495329",
         client: true,
         favorite: true,
       },
       {
+        id: 6,
         name: "Wagner Silva",
         email: "wagner@hotmail.com",
         phoneNumber: "(48) 984562272",
@@ -89,7 +90,6 @@ export default new Vuex.Store({
         city: "Florianópolis",
         state: "SC",
         cep: "88050515",
-        phoneNumber2: "4898495329",
         client: false,
         favorite: false,
       },
@@ -101,8 +101,8 @@ export default new Vuex.Store({
     },
     SET_USERS(state, payload) {
       for (let i = 0; i < payload.length; i++) {
-        console.log(payload[i], "get users");
         let newUser = {
+          id: state.contactList.length + 1,
           name: payload[i].name,
           email: payload[i].email,
           phoneNumber: payload[i].phone,
@@ -115,10 +115,16 @@ export default new Vuex.Store({
       }
     },
     SET_NEW_CONTACT(state, contact) {
+      let id = state.contactList.length + 1;
+      contact.id = id;
       state.contactList.push(contact);
     },
-    EDITED_LIST(state, newList) {
-      state.contactList = newList;
+    EDITED_LIST(state, editedItem) {
+      for (let i = 0; i < state.contactList.length; i++) {
+        if (state.contactList[i].id == editedItem.id) {
+          state.contactList[i] = editedItem;
+        }
+      }
     },
   },
   actions: {

@@ -5,17 +5,17 @@
         <v-tabs v-model="tab" background-color="primary accent-4" centered dark icons-and-text>
           <v-tabs-slider></v-tabs-slider>
 
-          <v-tab href="#contacts" v-on:click="updateContacts()">
+          <v-tab href="#contacts" @click="updateContacts()">
             Contacts
             <v-icon>mdi-account</v-icon>
           </v-tab>
 
-          <v-tab href="#clients" v-on:click="updateClients()">
+          <v-tab href="#clients" @click="updateClients()">
             Clients
             <v-icon>mdi-heart</v-icon>
           </v-tab>
 
-          <v-tab href="#favorites" v-on:click="updateFavorites()">
+          <v-tab href="#favorites" @click="updateFavorites()">
             Favorites
             <v-icon>mdi-star</v-icon>
           </v-tab>
@@ -57,6 +57,8 @@ export default {
   },
   data: () => ({
     tab: "contacts",
+    countClient: 0,
+    countFavorite: 0,
   }),
   created() {
     this.getUsers();
@@ -70,13 +72,19 @@ export default {
       }
     },
     updateContacts() {
-      this.$refs.contactList.update("contacts");
+      this.$refs.contactList.renderList("contacts");
     },
     updateClients() {
-      this.$refs.clientList.update("clients");
+      if (this.countClient != 0) {
+        this.$refs.clientList.renderList("clients");
+      }
+      this.countClient++;
     },
     updateFavorites() {
-      this.$refs.favoriteList.update("favorites");
+      if (this.countFavorite != 0) {
+        this.$refs.favoriteList.renderList("favorites");
+      }
+      this.countFavorite++;
     },
   },
 };

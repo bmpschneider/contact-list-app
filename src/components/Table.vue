@@ -218,6 +218,7 @@ export default {
     desserts: [],
     editedIndex: -1,
     editedItem: {
+      id: "",
       name: "",
       email: "",
       phoneNumber: "",
@@ -268,31 +269,18 @@ export default {
   },
 
   created() {
-    this.initialize();
+    this.renderList();
   },
 
   methods: {
-    initialize() {
-      switch (this.tab) {
-        case "contacts":
-          this.desserts = this.$store.state.contactList;
-          break;
-        case "clients":
-          this.desserts = this.$store.state.contactList;
-          this.desserts = this.desserts.filter((desserts) => {
-            return desserts.client == true;
-          });
-          break;
-        case "favorites":
-          this.desserts = this.$store.state.contactList;
-          this.desserts = this.desserts.filter((desserts) => {
-            return desserts.favorite == true;
-          });
-          break;
+    renderList(tab) {
+      let currentTab;
+      if (!tab) {
+        currentTab = this.tab;
+      } else {
+        currentTab = tab;
       }
-    },
-    update(tab) {
-      switch (tab) {
+      switch (currentTab) {
         case "contacts":
           this.desserts = this.$store.state.contactList;
           break;
@@ -340,6 +328,9 @@ export default {
     },
     deleteItemConfirm() {
       this.desserts.splice(this.editedIndex, 1);
+      this.msgSucess = "Successfully deleted";
+      this.alertSucess = true;
+      this.hideAlert();
       this.closeDelete();
     },
     close() {
@@ -362,19 +353,19 @@ export default {
       if (isValid) {
         if (this.editedIndex > -1) {
           Object.assign(this.desserts[this.editedIndex], this.editedItem);
-          this.$store.dispatch("editedList", this.desserts);
+          this.$store.dispatch("editedList", this.editedItem);
           this.msgSucess = "Successfully edited!";
         } else {
           this.$store.dispatch("addNewContact", this.editedItem);
           this.msgSucess = "Successfully registered";
-          this.initialize();
         }
         this.alertSucess = true;
-        this.hideAlert();
-        this.close();
         this.cep = "";
         this.selectedCategory = "";
         this.errorMessagesName = false;
+        this.initialize();
+        this.hideAlert();
+        this.close();
       } else {
         this.alertError = true;
         this.errorMessagesName = true;
