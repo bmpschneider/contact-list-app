@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Header />
+    <!-- <Header /> -->
     <v-main>
       <Home />
     </v-main>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Header from "./components/Header.vue";
+// import Header from "./components/Header.vue";
 import Home from "./views/Home";
 
 export default {
@@ -16,7 +16,7 @@ export default {
 
   components: {
     Home,
-    Header,
+    // Header,
   },
 };
 </script>
@@ -28,5 +28,6 @@ export default {
 
 main {
   background-color: #f1f1f1;
+  background-image: url("assets/background.jpg");
 }
 </style>
